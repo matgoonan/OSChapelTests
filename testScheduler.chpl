@@ -13,6 +13,7 @@
  * * Scheduler.chpl
  *
  * Author: Kyle Burke <https://github.com/paithan>
+ * Author: Matheau Goonan <https://github.com/matgoonan>
  */
 use Time;
 use Random;
@@ -80,6 +81,7 @@ for i in trialsDomain {
     var zz : int;
     zz = numberJobs;
     //runTest(mode, numCPUs, numJobs, efficiencyGoal);
+
     var newResult = runTest(numCPUs, numberJobs, i);
 
     if (results == nilResult) {
@@ -174,6 +176,11 @@ proc runTest(numCPUs : int, numberJobs : int, modeIndex : int) : TestResult {
     var description = "Results of " + mode + " test:\nRecorded time: " + efficiencyMeasure + "s.\nBest goal passed: " + goalMade + "\nPoints earned: " + score + "/" + maxScore + "\n\n";
 
     writeln(description);
+
+    forall i in cpus.domain {
+        cpus[i].stop();
+    }
+    scheduler.stop();
 
     return new TestResult(score, maxScore, description);
 
